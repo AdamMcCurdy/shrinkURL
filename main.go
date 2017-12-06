@@ -24,13 +24,13 @@ func randSeq(n int) string {
 	for i := range b {
 		b[i] = runes[rand.Intn(len(runes))]
 	}
+
 	return string(b)
 }
 
 // SaveNewValue returns for success
 func saveNewValue(key string, value string) {
 	err := client.Set(key, value, 0).Err()
-
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +55,6 @@ func (p *Page) save() error {
 func loadPage(title string) (*Page, error) {
 	filename := title + ".html"
 	body, err := ioutil.ReadFile(filename)
-
 	if err != nil {
 		return nil, err
 	}
@@ -76,12 +75,13 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// postHandler converts post request body to string
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		r.ParseForm()
 		randString := randSeq(8)
 		go saveNewValue(randString, r.Form["url"][0])
+		htmlString := "<h1>Your ShortURL</h1>" + "<a href=\"" + "http://localhost:8080/" + randString + "\">" + "http://localhost:8080/" + randString + "</a>"
+		fmt.Fprintf(w, "%s", htmlString)
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
