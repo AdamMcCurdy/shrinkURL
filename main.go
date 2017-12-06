@@ -64,7 +64,6 @@ func loadPage(title string) (*Page, error) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/"):]
-	fmt.Println(title)
 
 	if title == "" {
 		p, _ := loadPage("index")
